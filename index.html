@@ -1,339 +1,1722 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HIM Kidney Care | Dialysis Management System</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
+<title>HIM Kidney Care | Dialysis Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#243447;
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* ================= HEADER ================= */
+
+.topbar{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:78px;
+    background:linear-gradient(135deg,#075985,#0e7490);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 32px;
+    z-index:1000;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.brand-icon{
+    font-size:30px;
+}
+
+.brand h1{
+    font-size:24px;
+}
+
+.brand p{
+    font-size:12px;
+    margin-top:4px;
+    opacity:.85;
+}
+
+.admin{
+    background:rgba(255,255,255,.12);
+    padding:12px 20px;
+    border-radius:10px;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    width:230px;
+    position:fixed;
+    top:78px;
+    bottom:0;
+    left:0;
+    background:white;
+    border-right:1px solid #dbe3ec;
+    overflow-y:auto;
+    padding:22px 15px;
+}
+
+.menu-title{
+    font-size:11px;
+    font-weight:bold;
+    color:#64748b;
+    margin:10px 10px 8px;
+}
+
+.menu-btn{
+    width:100%;
+    border:none;
+    background:none;
+    padding:13px 15px;
+    text-align:left;
+    font-size:15px;
+    color:#334155;
+    cursor:pointer;
+    border-radius:10px;
+    margin-bottom:4px;
+    transition:.2s;
+}
+
+.menu-btn:hover{
+    background:#e0f2fe;
+    color:#0369a1;
+}
+
+.menu-btn.active{
+    background:#dbeefe;
+    color:#075985;
+    font-weight:bold;
+}
+
+/* ================= CONTENT ================= */
+
+.content{
+    margin-left:230px;
+    margin-top:78px;
+    width:calc(100% - 230px);
+    padding:32px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.page-header h2{
+    color:#1e3a5f;
+}
+
+.page-header p{
+    color:#64748b;
+    margin-top:5px;
+}
+
+/* ================= BUTTON ================= */
+
+.btn{
+    border:none;
+    padding:11px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:#0284c7;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#0369a1;
+}
+
+.btn-success{
+    background:#16a34a;
+    color:white;
+}
+
+.btn-danger{
+    background:#dc2626;
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+/* ================= CARDS ================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:14px;
+    box-shadow:0 4px 15px rgba(0,0,0,.06);
+    border-left:4px solid #0284c7;
+}
+
+.card h4{
+    color:#64748b;
+    font-size:14px;
+    margin-bottom:14px;
+}
+
+.card .number{
+    font-size:30px;
+    font-weight:bold;
+    color:#1e293b;
+}
+
+/* ================= PANEL ================= */
+
+.panel{
+    background:white;
+    padding:22px;
+    border-radius:14px;
+    box-shadow:0 4px 15px rgba(0,0,0,.06);
+    margin-bottom:25px;
+}
+
+.panel h3{
+    margin-bottom:18px;
+    color:#334155;
+}
+
+/* ================= TABLE ================= */
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#eaf3f8;
+    color:#334155;
+    text-align:left;
+    padding:14px;
+}
+
+td{
+    padding:13px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+/* ================= FORM ================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:7px;
+    color:#475569;
+}
+
+input,select,textarea{
+    padding:12px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    font-size:14px;
+}
+
+textarea{
+    min-height:90px;
+}
+
+input:focus,select:focus,textarea:focus{
+    outline:none;
+    border-color:#0284c7;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    z-index:3000;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.5);
+    align-items:center;
+    justify-content:center;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:700px;
+    max-width:95%;
+    max-height:90vh;
+    overflow:auto;
+    background:white;
+    border-radius:15px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    font-size:26px;
+    cursor:pointer;
+    border:none;
+    background:none;
+}
+
+.form-actions{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+}
+
+/* ================= STATUS ================= */
+
+.badge{
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.badge-green{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.badge-blue{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.badge-orange{
+    background:#ffedd5;
+    color:#c2410c;
+}
+
+.empty{
+    text-align:center;
+    padding:35px;
+    color:#64748b;
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+        width:70px;
     }
 
-    body {
-      background: #f4f8fc;
-      color: #1e293b;
+    .menu-btn{
+        font-size:0;
+        padding:15px;
     }
 
-    .header {
-      background: linear-gradient(135deg, #075985, #0284c7);
-      color: white;
-      padding: 20px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    .menu-btn::first-letter{
+        font-size:16px;
     }
 
-    .brand h1 {
-      font-size: 26px;
+    .content{
+        margin-left:70px;
+        width:calc(100% - 70px);
+        padding:18px;
     }
 
-    .brand p {
-      font-size: 13px;
-      opacity: 0.9;
-      margin-top: 5px;
+    .form-grid{
+        grid-template-columns:1fr;
     }
 
-    .user {
-      background: rgba(255,255,255,0.15);
-      padding: 10px 18px;
-      border-radius: 10px;
+    .brand h1{
+        font-size:18px;
     }
 
-    .layout {
-      display: flex;
-      min-height: calc(100vh - 86px);
+    .brand p{
+        display:none;
     }
-
-    .sidebar {
-      width: 260px;
-      background: #ffffff;
-      padding: 20px;
-      box-shadow: 2px 0 12px rgba(0,0,0,0.06);
-    }
-
-    .menu-title {
-      color: #64748b;
-      font-size: 12px;
-      font-weight: bold;
-      margin: 15px 10px;
-    }
-
-    .menu-item {
-      padding: 14px 15px;
-      margin-bottom: 7px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.2s;
-      font-size: 15px;
-    }
-
-    .menu-item:hover,
-    .menu-item.active {
-      background: #e0f2fe;
-      color: #0369a1;
-      font-weight: bold;
-    }
-
-    .main {
-      flex: 1;
-      padding: 30px;
-    }
-
-    .welcome {
-      margin-bottom: 25px;
-    }
-
-    .welcome h2 {
-      font-size: 28px;
-      color: #0f172a;
-    }
-
-    .welcome p {
-      color: #64748b;
-      margin-top: 7px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .card {
-      background: white;
-      padding: 22px;
-      border-radius: 15px;
-      box-shadow: 0 4px 18px rgba(15,23,42,0.07);
-      border-left: 5px solid #0284c7;
-      transition: transform 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-    }
-
-    .card h3 {
-      color: #64748b;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .number {
-      font-size: 30px;
-      font-weight: bold;
-      color: #0f172a;
-    }
-
-    .section {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 4px 18px rgba(15,23,42,0.07);
-      margin-bottom: 25px;
-    }
-
-    .section h3 {
-      margin-bottom: 20px;
-      color: #075985;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th {
-      background: #f0f9ff;
-      color: #075985;
-      text-align: left;
-      padding: 14px;
-    }
-
-    td {
-      padding: 14px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .status {
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .completed {
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    .scheduled {
-      background: #fef3c7;
-      color: #a16207;
-    }
-
-    @media(max-width: 768px) {
-      .sidebar {
-        width: 75px;
-        padding: 10px;
-      }
-
-      .menu-item {
-        font-size: 0;
-      }
-
-      .menu-item:first-letter {
-        font-size: 18px;
-      }
-
-      .main {
-        padding: 15px;
-      }
-
-      .header {
-        padding: 15px;
-      }
-
-      .brand h1 {
-        font-size: 20px;
-      }
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-  <header class="header">
-    <div class="brand">
-      <h1>🏥 HIM Kidney Care</h1>
-      <p>Complete Dialysis Management System</p>
+<!-- HEADER -->
+
+<header class="topbar">
+
+<div class="brand">
+<div class="brand-icon">🏥</div>
+
+<div>
+<h1>HIM Kidney Care</h1>
+<p>Complete Dialysis Management System</p>
+</div>
+</div>
+
+<div class="admin">
+👤 Admin
+</div>
+
+</header>
+
+
+<div class="app">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="menu-title">MAIN MENU</div>
+
+<button class="menu-btn active" onclick="showPage('dashboard',this)">
+📊 Dashboard
+</button>
+
+<button class="menu-btn" onclick="showPage('patients',this)">
+👥 Patients
+</button>
+
+<button class="menu-btn" onclick="showPage('opd',this)">
+🩺 OPD
+</button>
+
+<button class="menu-btn" onclick="showPage('ipd',this)">
+🛏️ IPD
+</button>
+
+<button class="menu-btn" onclick="showPage('icu',this)">
+🏥 ICU Dialysis
+</button>
+
+<button class="menu-btn" onclick="showPage('dialysis',this)">
+💉 Dialysis
+</button>
+
+
+<div class="menu-title">BILLING & INSURANCE</div>
+
+<button class="menu-btn" onclick="showPage('ayushman',this)">
+💳 Ayushman Bharat
+</button>
+
+<button class="menu-btn" onclick="showPage('himcare',this)">
+❤️ HIM Care
+</button>
+
+<button class="menu-btn" onclick="showPage('tpa',this)">
+📄 TPA
+</button>
+
+<button class="menu-btn" onclick="showPage('others',this)">
+💰 Others
+</button>
+
+
+<div class="menu-title">MANAGEMENT</div>
+
+<button class="menu-btn" onclick="showPage('stock',this)">
+📦 Stock Management
+</button>
+
+<button class="menu-btn" onclick="showPage('staff',this)">
+👨‍⚕️ Staff
+</button>
+
+<button class="menu-btn" onclick="showPage('reports',this)">
+📈 Reports
+</button>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+
+<main class="content">
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="page active">
+
+<div class="page-header">
+
+<div>
+<h2>Good Morning 👋</h2>
+<p>Welcome to HIM Kidney Care Dialysis Management System</p>
+</div>
+
+</div>
+
+
+<div class="cards">
+
+<div class="card">
+<h4>Today's Patients</h4>
+<div class="number" id="todayPatients">0</div>
+</div>
+
+<div class="card">
+<h4>Today's Dialysis</h4>
+<div class="number" id="todayDialysis">0</div>
+</div>
+
+<div class="card">
+<h4>Active Patients</h4>
+<div class="number" id="activePatients">0</div>
+</div>
+
+<div class="card">
+<h4>Today's Revenue</h4>
+<div class="number">₹0</div>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h3>Today's Dialysis Schedule</h3>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+<tr>
+<th>Patient</th>
+<th>UHID</th>
+<th>Shift</th>
+<th>Machine</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="dashboardDialysis">
+
+<tr>
+<td colspan="5" class="empty">
+No dialysis scheduled today
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h3>Quick Overview</h3>
+
+<div class="cards">
+
+<div class="card">
+<h4>OPD Patients</h4>
+<div class="number" id="opdCount">0</div>
+</div>
+
+<div class="card">
+<h4>IPD Patients</h4>
+<div class="number">0</div>
+</div>
+
+<div class="card">
+<h4>ICU Dialysis</h4>
+<div class="number">0</div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= PATIENTS ================= -->
+
+<section id="patients" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>Patient Management</h2>
+<p>Manage all dialysis patients</p>
+</div>
+
+<button class="btn btn-primary" onclick="openPatientModal()">
++ Add New Patient
+</button>
+
+</div>
+
+
+<div class="panel">
+
+<h3>Registered Patients</h3>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+<tr>
+<th>UHID</th>
+<th>Patient Name</th>
+<th>Age</th>
+<th>Gender</th>
+<th>Mobile</th>
+<th>Category</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="patientsTable">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= OPD ================= -->
+
+<section id="opd" class="page">
+
+<div class="page-header">
+<div>
+<h2>OPD Management</h2>
+<p>Out Patient Department</p>
+</div>
+
+<button class="btn btn-primary" onclick="addOPD()">
++ New OPD Entry
+</button>
+</div>
+
+<div class="panel">
+
+<h3>OPD Patients</h3>
+
+<div id="opdContent" class="empty">
+No OPD records available
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= IPD ================= -->
+
+<section id="ipd" class="page">
+
+<div class="page-header">
+<div>
+<h2>IPD Management</h2>
+<p>In Patient Department</p>
+</div>
+
+<button class="btn btn-primary" onclick="simpleAlert('IPD Admission module opened')">
++ New Admission
+</button>
+</div>
+
+<div class="panel">
+
+<h3>IPD Patients</h3>
+
+<div class="empty">
+No IPD patients currently admitted
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= ICU ================= -->
+
+<section id="icu" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>ICU Dialysis</h2>
+<p>Critical care dialysis management</p>
+</div>
+
+<button class="btn btn-primary" onclick="simpleAlert('ICU Dialysis entry module opened')">
++ New ICU Dialysis
+</button>
+
+</div>
+
+<div class="panel">
+
+<h3>ICU Dialysis Records</h3>
+
+<div class="empty">
+No ICU dialysis records available
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= DIALYSIS ================= -->
+
+<section id="dialysis" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>Dialysis Management</h2>
+<p>Schedule and manage dialysis sessions</p>
+</div>
+
+<button class="btn btn-primary" onclick="openDialysisModal()">
++ Schedule Dialysis
+</button>
+
+</div>
+
+
+<div class="panel">
+
+<h3>Dialysis Schedule</h3>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Patient</th>
+<th>Shift</th>
+<th>Machine</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="dialysisTable">
+
+<tr>
+<td colspan="5" class="empty">
+No dialysis scheduled
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= AYUSHMAN ================= -->
+
+<section id="ayushman" class="page">
+
+<div class="page-header">
+<div>
+<h2>Ayushman Bharat</h2>
+<p>Ayushman Bharat Patient & Billing Management</p>
+</div>
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h4>Total Patients</h4>
+<div class="number">0</div>
+</div>
+
+<div class="card">
+<h4>Pending Claims</h4>
+<div class="number">0</div>
+</div>
+
+<div class="card">
+<h4>Approved Claims</h4>
+<div class="number">0</div>
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= HIM CARE ================= -->
+
+<section id="himcare" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>HIM Care</h2>
+<p>HIM Care Scheme Management</p>
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>HIM Care Patients</h3>
+
+<div class="empty">
+No HIM Care records available
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= TPA ================= -->
+
+<section id="tpa" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>TPA Management</h2>
+<p>Third Party Administrator & Insurance Management</p>
+</div>
+
+<button class="btn btn-primary" onclick="simpleAlert('New TPA case module opened')">
++ New TPA Case
+</button>
+
+</div>
+
+<div class="panel">
+
+<h3>TPA Cases</h3>
+
+<div class="empty">
+No TPA cases available
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= OTHERS ================= -->
+
+<section id="others" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>Other Billing</h2>
+<p>Cash and other payment categories</p>
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Other Billing Records</h3>
+
+<div class="empty">
+No billing records available
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= STOCK ================= -->
+
+<section id="stock" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>Stock Management</h2>
+<p>Manage dialysis consumables and inventory</p>
+</div>
+
+<button class="btn btn-primary" onclick="simpleAlert('Add Stock module opened')">
++ Add Stock
+</button>
+
+</div>
+
+
+<div class="cards">
+
+<div class="card">
+<h4>Total Items</h4>
+<div class="number">0</div>
+</div>
+
+<div class="card">
+<h4>Low Stock Items</h4>
+<div class="number">0</div>
+</div>
+
+<div class="card">
+<h4>Stock Value</h4>
+<div class="number">₹0</div>
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= STAFF ================= -->
+
+<section id="staff" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>Staff Management</h2>
+<p>Manage doctors, nurses and other employees</p>
+</div>
+
+<button class="btn btn-primary" onclick="simpleAlert('Add Staff module opened')">
++ Add Staff
+</button>
+
+</div>
+
+<div class="panel">
+
+<h3>Staff List</h3>
+
+<div class="empty">
+No staff records available
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= REPORTS ================= -->
+
+<section id="reports" class="page">
+
+<div class="page-header">
+
+<div>
+<h2>Reports</h2>
+<p>Dialysis and patient reports</p>
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h4>Daily Report</h4>
+<button class="btn btn-primary" onclick="simpleAlert('Daily report will be generated')">
+Generate
+</button>
+</div>
+
+<div class="card">
+<h4>Monthly Report</h4>
+<button class="btn btn-primary" onclick="simpleAlert('Monthly report will be generated')">
+Generate
+</button>
+</div>
+
+<div class="card">
+<h4>Patient Report</h4>
+<button class="btn btn-primary" onclick="simpleAlert('Patient report will be generated')">
+Generate
+</button>
+</div>
+
+</div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+
+<!-- ================= PATIENT MODAL ================= -->
+
+<div class="modal" id="patientModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Add New Patient</h2>
+
+<button class="close" onclick="closePatientModal()">×</button>
+
+</div>
+
+
+<form onsubmit="savePatient(event)">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Patient Name *</label>
+<input type="text" id="patientName" required>
+</div>
+
+<div class="form-group">
+<label>UHID *</label>
+<input type="text" id="uhid" required>
+</div>
+
+<div class="form-group">
+<label>Age</label>
+<input type="number" id="age">
+</div>
+
+<div class="form-group">
+<label>Gender</label>
+
+<select id="gender">
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+<option value="Other">Other</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Mobile Number</label>
+<input type="tel" id="mobile">
+</div>
+
+<div class="form-group">
+<label>Payment Category</label>
+
+<select id="category">
+<option value="Cash">Cash</option>
+<option value="Ayushman Bharat">Ayushman Bharat</option>
+<option value="HIM Care">HIM Care</option>
+<option value="TPA">TPA</option>
+<option value="HGB">HGB</option>
+</select>
+
+</div>
+
+<div class="form-group full">
+
+<label>Address</label>
+
+<textarea id="address"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="form-actions">
+
+<button type="button"
+class="btn btn-secondary"
+onclick="closePatientModal()">
+Cancel
+</button>
+
+<button type="submit"
+class="btn btn-success">
+Save Patient
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+<!-- ================= DIALYSIS MODAL ================= -->
+
+<div class="modal" id="dialysisModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Schedule Dialysis</h2>
+
+<button class="close" onclick="closeDialysisModal()">×</button>
+
+</div>
+
+
+<form onsubmit="saveDialysis(event)">
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Select Patient *</label>
+
+<select id="dialysisPatient" required>
+<option value="">Select Patient</option>
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Date *</label>
+
+<input type="date" id="dialysisDate" required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Shift</label>
+
+<select id="shift">
+
+<option value="Morning">Morning</option>
+<option value="Afternoon">Afternoon</option>
+<option value="Evening">Evening</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Machine Number</label>
+
+<input type="text"
+id="machine"
+placeholder="Example: Machine 01">
+
+</div>
+
+</div>
+
+
+<div class="form-actions">
+
+<button type="button"
+class="btn btn-secondary"
+onclick="closeDialysisModal()">
+Cancel
+</button>
+
+<button type="submit"
+class="btn btn-success">
+Schedule Dialysis
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+/* ================= DATA ================= */
+
+let patients =
+JSON.parse(localStorage.getItem("himPatients")) || [];
+
+let dialysisSessions =
+JSON.parse(localStorage.getItem("himDialysis")) || [];
+
+
+/* ================= NAVIGATION ================= */
+
+function showPage(pageId,button){
+
+    document.querySelectorAll(".page")
+    .forEach(page=>{
+        page.classList.remove("active");
+    });
+
+    document.getElementById(pageId)
+    .classList.add("active");
+
+    document.querySelectorAll(".menu-btn")
+    .forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* ================= PATIENT ================= */
+
+function openPatientModal(){
+
+    document.getElementById("patientModal")
+    .classList.add("show");
+
+}
+
+function closePatientModal(){
+
+    document.getElementById("patientModal")
+    .classList.remove("show");
+
+}
+
+
+function savePatient(event){
+
+    event.preventDefault();
+
+    let patient={
+
+        id:Date.now(),
+
+        name:
+        document.getElementById("patientName").value,
+
+        uhid:
+        document.getElementById("uhid").value,
+
+        age:
+        document.getElementById("age").value,
+
+        gender:
+        document.getElementById("gender").value,
+
+        mobile:
+        document.getElementById("mobile").value,
+
+        category:
+        document.getElementById("category").value,
+
+        address:
+        document.getElementById("address").value,
+
+        status:"Active"
+
+    };
+
+
+    patients.push(patient);
+
+    localStorage.setItem(
+        "himPatients",
+        JSON.stringify(patients)
+    );
+
+    event.target.reset();
+
+    closePatientModal();
+
+    renderPatients();
+
+    updateDashboard();
+
+    alert("Patient added successfully!");
+
+}
+
+
+/* ================= PATIENT TABLE ================= */
+
+function renderPatients(){
+
+    let table =
+    document.getElementById("patientsTable");
+
+    if(!table) return;
+
+    if(patients.length===0){
+
+        table.innerHTML=`
+        <tr>
+        <td colspan="8" class="empty">
+        No patients registered yet
+        </td>
+        </tr>`;
+
+        return;
+
+    }
+
+
+    table.innerHTML=
+    patients.map(patient=>`
+
+    <tr>
+
+    <td>${patient.uhid}</td>
+
+    <td><b>${patient.name}</b></td>
+
+    <td>${patient.age || "-"}</td>
+
+    <td>${patient.gender}</td>
+
+    <td>${patient.mobile || "-"}</td>
+
+    <td>
+    <span class="badge badge-blue">
+    ${patient.category}
+    </span>
+    </td>
+
+    <td>
+    <span class="badge badge-green">
+    Active
+    </span>
+    </td>
+
+    <td>
+
+    <button
+    class="btn btn-danger"
+    style="padding:7px 10px"
+    onclick="deletePatient(${patient.id})">
+
+    Delete
+
+    </button>
+
+    </td>
+
+    </tr>
+
+    `).join("");
+
+}
+
+
+function deletePatient(id){
+
+    if(!confirm("Delete this patient?")){
+        return;
+    }
+
+    patients=
+    patients.filter(patient=>patient.id!==id);
+
+    localStorage.setItem(
+        "himPatients",
+        JSON.stringify(patients)
+    );
+
+    renderPatients();
+
+    updateDashboard();
+
+}
+
+
+/* ================= DIALYSIS ================= */
+
+function openDialysisModal(){
+
+    let select =
+    document.getElementById("dialysisPatient");
+
+    select.innerHTML=
+    `<option value="">Select Patient</option>`;
+
+    patients.forEach(patient=>{
+
+        select.innerHTML+=
+        `<option value="${patient.id}">
+        ${patient.name} (${patient.uhid})
+        </option>`;
+
+    });
+
+
+    document.getElementById("dialysisDate").value =
+    new Date().toISOString().split("T")[0];
+
+
+    document.getElementById("dialysisModal")
+    .classList.add("show");
+
+}
+
+
+function closeDialysisModal(){
+
+    document.getElementById("dialysisModal")
+    .classList.remove("show");
+
+}
+
+
+function saveDialysis(event){
+
+    event.preventDefault();
+
+    let patientId =
+    Number(
+        document.getElementById("dialysisPatient").value
+    );
+
+
+    let patient =
+    patients.find(p=>p.id===patientId);
+
+
+    if(!patient){
+
+        alert("Please select a patient");
+
+        return;
+
+    }
+
+
+    let session={
+
+        id:Date.now(),
+
+        patientId:patient.id,
+
+        patientName:patient.name,
+
+        uhid:patient.uhid,
+
+        date:
+        document.getElementById("dialysisDate").value,
+
+        shift:
+        document.getElementById("shift").value,
+
+        machine:
+        document.getElementById("machine").value
+        || "Not Assigned",
+
+        status:"Scheduled"
+
+    };
+
+
+    dialysisSessions.push(session);
+
+
+    localStorage.setItem(
+        "himDialysis",
+        JSON.stringify(dialysisSessions)
+    );
+
+
+    closeDialysisModal();
+
+    event.target.reset();
+
+    renderDialysis();
+
+    updateDashboard();
+
+    alert("Dialysis scheduled successfully!");
+
+}
+
+
+/* ================= DIALYSIS TABLE ================= */
+
+function renderDialysis(){
+
+    let table =
+    document.getElementById("dialysisTable");
+
+
+    if(dialysisSessions.length===0){
+
+        table.innerHTML=`
+
+        <tr>
+        <td colspan="5" class="empty">
+        No dialysis scheduled
+        </td>
+        </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML=
+    dialysisSessions.map(session=>`
+
+    <tr>
+
+    <td>${session.date}</td>
+
+    <td>${session.patientName}</td>
+
+    <td>${session.shift}</td>
+
+    <td>${session.machine}</td>
+
+    <td>
+
+    <span class="badge badge-orange">
+
+    ${session.status}
+
+    </span>
+
+    </td>
+
+    </tr>
+
+    `).join("");
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function updateDashboard(){
+
+    document.getElementById("activePatients")
+    .innerText=patients.length;
+
+
+    document.getElementById("todayPatients")
+    .innerText=patients.length;
+
+
+    let today=
+    new Date().toISOString().split("T")[0];
+
+
+    let todaySessions=
+    dialysisSessions.filter(
+        session=>session.date===today
+    );
+
+
+    document.getElementById("todayDialysis")
+    .innerText=todaySessions.length;
+
+
+    let dashboardTable=
+    document.getElementById("dashboardDialysis");
+
+
+    if(todaySessions.length===0){
+
+        dashboardTable.innerHTML=`
+
+        <tr>
+
+        <td colspan="5" class="empty">
+
+        No dialysis scheduled today
+
+        </td>
+
+        </tr>
+
+        `;
+
+    }
+
+    else{
+
+        dashboardTable.innerHTML=
+        todaySessions.map(session=>`
+
+        <tr>
+
+        <td>${session.patientName}</td>
+
+        <td>${session.uhid}</td>
+
+        <td>${session.shift}</td>
+
+        <td>${session.machine}</td>
+
+        <td>
+
+        <span class="badge badge-orange">
+
+        ${session.status}
+
+        </span>
+
+        </td>
+
+        </tr>
+
+        `).join("");
+
+    }
+
+}
+
+
+/* ================= OPD ================= */
+
+function addOPD(){
+
+    document.getElementById("opdContent")
+    .innerHTML=`
+
+    <div style="text-align:center;padding:20px">
+
+    <h3>OPD Entry Module</h3>
+
+    <p style="margin:15px;color:#64748b">
+
+    OPD patient registration functionality
+    will be connected to Supabase in the next phase.
+
+    </p>
+
     </div>
 
-    <div class="user">
-      👤 Admin
-    </div>
-  </header>
+    `;
 
-  <div class="layout">
+}
 
-    <aside class="sidebar">
 
-      <div class="menu-title">MAIN MENU</div>
+/* ================= ALERT ================= */
 
-      <div class="menu-item active">📊 Dashboard</div>
-      <div class="menu-item">👥 Patients</div>
-      <div class="menu-item">🩺 OPD</div>
-      <div class="menu-item">🛏️ IPD</div>
-      <div class="menu-item">🏥 ICU Dialysis</div>
-      <div class="menu-item">💉 Dialysis</div>
+function simpleAlert(message){
 
-      <div class="menu-title">BILLING & INSURANCE</div>
+    alert(message);
 
-      <div class="menu-item">💳 Ayushman Bharat</div>
-      <div class="menu-item">❤️ HIM Care</div>
-      <div class="menu-item">📄 TPA</div>
-      <div class="menu-item">💰 Others</div>
+}
 
-      <div class="menu-title">MANAGEMENT</div>
 
-      <div class="menu-item">📦 Stock Management</div>
-      <div class="menu-item">👨‍⚕️ Staff</div>
-      <div class="menu-item">📈 Reports</div>
-      <div class="menu-item">⚙️ Settings</div>
+/* ================= INITIAL LOAD ================= */
 
-    </aside>
+renderPatients();
 
-    <main class="main">
+renderDialysis();
 
-      <div class="welcome">
-        <h2>Good Morning 👋</h2>
-        <p>Welcome to HIM Kidney Care Dialysis Management System</p>
-      </div>
+updateDashboard();
 
-      <div class="cards">
-
-        <div class="card">
-          <h3>Today's Patients</h3>
-          <div class="number">0</div>
-        </div>
-
-        <div class="card">
-          <h3>Today's Dialysis</h3>
-          <div class="number">0</div>
-        </div>
-
-        <div class="card">
-          <h3>Active Patients</h3>
-          <div class="number">0</div>
-        </div>
-
-        <div class="card">
-          <h3>Today's Revenue</h3>
-          <div class="number">₹0</div>
-        </div>
-
-      </div>
-
-      <div class="section">
-
-        <h3>Today's Dialysis Schedule</h3>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Patient</th>
-              <th>UHID</th>
-              <th>Shift</th>
-              <th>Machine</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td colspan="5" style="text-align:center; color:#64748b;">
-                No dialysis scheduled today
-              </td>
-            </tr>
-          </tbody>
-
-        </table>
-
-      </div>
-
-      <div class="section">
-
-        <h3>Quick Overview</h3>
-
-        <div class="cards">
-
-          <div class="card">
-            <h3>OPD Patients</h3>
-            <div class="number">0</div>
-          </div>
-
-          <div class="card">
-            <h3>IPD Patients</h3>
-            <div class="number">0</div>
-          </div>
-
-          <div class="card">
-            <h3>ICU Dialysis</h3>
-            <div class="number">0</div>
-          </div>
-
-        </div>
-
-      </div>
-
-    </main>
-
-  </div>
+</script>
 
 </body>
 </html>
